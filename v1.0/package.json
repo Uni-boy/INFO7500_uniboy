@@ -1,0 +1,19 @@
+{
+  "name": "v1.0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Uni-boy/INFO7500_uniboy.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Uni-boy/INFO7500_uniboy/issues"
+  },
+  "homepage": "https://github.com/Uni-boy/INFO7500_uniboy#readme"
+}
