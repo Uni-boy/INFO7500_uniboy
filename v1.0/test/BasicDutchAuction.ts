@@ -3,31 +3,37 @@ import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("NeuToken", function () {
-  async function deployNeuTokenFixture() {
-    const [owner, otherAccount] = await ethers.getSigners();
+describe("BasicDutchAuction", function () {
+  async function deployDutchAuctionFixture() {
+    const [owner, addr1, addr2] = await ethers.getSigners();
 
-    const neuTokenFactory = await ethers.getContractFactory("NeuToken");
-    const neuToken = await neuTokenFactory.connect(owner).deploy();
+    const BDAToken = await ethers.getContractFactory("BasicDutchAuction");
+    const Token = await BDAToken.connect(owner).deploy(
+      0, // reservePrice
+      10, // numBlocksAuctionOpen
+      1 // offerPriceDecrement
+    );
 
-    return { neuToken, owner, otherAccount};
+    return { Token, owner, addr1, addr2};
   }
 
-  describe("AuctionToken Deployment", function () {
-    it("should return current total price", async function () {
-      const {neuToken, owner} = await loadFixture(deployNeuTokenFixture);
-
-      expect(await neuToken.balance(owner.address)).to.equal(5000);
+  describe("bid", function () {
+    it("reject a low bid", async function () {
+      const {Token, owner, addr1} = await loadFixture(deployDutchAuctionFixture);
+      
+      // block 1
+      // expect(await Token.bid(9)).to.be.revertedWith("Bid is lower than currentPrice");
+      // expect(await Token.bid(10)).to.be.revertedWith("Bid is lower than currentPrice"); 
+      await Token.bid(10);
+      expect(await Token.stopped()).to.equal(true);
     });
   });
 
-  describe("AuctionToken Deployment", function () {
-    it("should transfer the amount", async function () {
-      const {neuToken, owner, otherAccount} = await loadFixture(deployNeuTokenFixture);
+  // describe("AuctionToken Deployment", function () {
+  //   it("should transfer the amount", async function () {
+  //     const {Token, owner, addr1, addr2} = await loadFixture(deployNeuTokenFixture);
 
-      await neuToken.transfer(otherAccount.address, 3000);
-      expect(await neuToken.balance(owner.address)).to.equal(2000);
-      expect(await neuToken.balance(otherAccount.address)).to.equal(3000);
-    });
-  });
+
+  //   });
+  // });
 });

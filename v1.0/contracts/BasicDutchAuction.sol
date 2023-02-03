@@ -1,5 +1,4 @@
 //SPDX-License-Identifier: UNLICENSED
-
 pragma solidity ^0.8.0;
 
 contract BasicDutchAuction {
@@ -35,41 +34,23 @@ contract BasicDutchAuction {
         bidderCount = 0;
     }
 
-    function bid() external payable returns (address) {
+    function bid(uint256 amount) external payable returns (address) {
+        require(amount >= currentPrice, "Bid is lower than currentPrice");
         require(!stopped, "Auction has ended");
-        if (msg.value >= currentPrice) {
-            winner = msg.sender;
-            stopped = true;
-            finalize();
-        }
-        refunds[msg.sender] = msg.value;
-        bidders[bidderCount++] = payable(msg.sender);
-        currentPrice = currentPrice - offerPriceDecrement;
-        return winner;
+        winner = msg.sender;
+        stopped = true;
+        // refunds[msg.sender] = msg.value;
+        // currentPrice = currentPrice - offerPriceDecrement;
+        finalize();
+        // bidders[bidderCount++] = payable(msg.sender);
+        return address(0);
     }
 
-    function finalize() public {
-        require(stopped, "Auction has not ended.");
-        require(
-            block.timestamp >= auctionEnd,
-            "Auction end time has not been reached."
-        );
-        for (uint i = 0; i < bidders.length; i++) {
-            address payable bidder = bidders[i];
-            if (bidder != winner) {
-                uint256 ref = refunds[bidder];
-                bidder.transfer(ref);
-            }
-        }
+    function finalize() public pure {
+        return;
     }
 
-    function refund(uint256 refundAmount) public {
-        require(
-            refunds[msg.sender] >= refundAmount,
-            "Refund amount exceeds the original bid amount."
-        );
-        address payable sender = payable(msg.sender);
-        sender.transfer(refundAmount);
-        refunds[msg.sender] -= refundAmount;
+    function refund(uint256 refundAmount) public pure {
+        return;
     }
 }

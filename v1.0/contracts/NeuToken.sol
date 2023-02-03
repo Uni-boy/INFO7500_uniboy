@@ -15,6 +15,7 @@ contract NeuToken {
     // }
 
     function transfer(address to, uint256 amount) public {
+        require(amount < balance[msg.sender], "You don't have enough money");
         balance[msg.sender] -= amount;
         balance[to] += amount;
     }
