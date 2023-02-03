@@ -22,9 +22,9 @@ describe("BasicDutchAuction", function () {
       const {Token, owner, addr1} = await loadFixture(deployDutchAuctionFixture);
       
       // block 1
-      // expect(await Token.bid(9)).to.be.revertedWith("Bid is lower than currentPrice");
+      // expect(await Token.bid({value: 9})).to.be.revertedWith("Bid is lower than currentPrice");
       // expect(await Token.bid(10)).to.be.revertedWith("Bid is lower than currentPrice"); 
-      await Token.bid(10);
+      await Token.bid({value: 10});
       expect(await Token.stopped()).to.equal(true);
     });
   });

@@ -34,8 +34,8 @@ contract BasicDutchAuction {
         bidderCount = 0;
     }
 
-    function bid(uint256 amount) external payable returns (address) {
-        require(amount >= currentPrice, "Bid is lower than currentPrice");
+    function bid() external payable returns (address) {
+        require(msg.value >= currentPrice, "Bid is lower than currentPrice");
         require(!stopped, "Auction has ended");
         winner = msg.sender;
         stopped = true;
