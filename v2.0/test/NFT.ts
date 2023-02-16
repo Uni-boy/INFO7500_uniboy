@@ -62,10 +62,10 @@ describe("NFTContract", function () {
 
     it("the auction should end and close", async function () {
       const { NFTContract, owner, auctionOwner, bidder, NFTDutchAuction } = await loadFixture(deployNFTDutchAuctionFixture);
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 5; i++) {
         await network.provider.send("evm_mine");
       }
-      await NFTDutchAuction.connect(bidder).bid({ value: 1500 });
+      await NFTDutchAuction.connect(bidder).bid({ value: 2000 });
       expect(await NFTDutchAuction.connect(auctionOwner).auctionEnd()).to.equal(true);
       expect(await NFTContract.balanceOf(owner.address)).to.equal(0);
       expect(await NFTContract.balanceOf(bidder.address)).to.equal(1);
