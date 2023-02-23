@@ -52,9 +52,8 @@ contract NFTDutchAuction {
             "Your bid is lower than the minimum bid"
         );
         auctionEnd = true;
-        nftContract.transferFrom(nftContract.ownerOf(nftTokenId), msg.sender, nftTokenId);
-        myToken.allowance(address(this), msg.sender);
         myToken.transferFrom(msg.sender, nftContract.ownerOf(nftTokenId), myToken.balanceOf(msg.sender));
+        nftContract.transferFrom(nftContract.ownerOf(nftTokenId), msg.sender, nftTokenId);
         return msg.sender;
     }
 }

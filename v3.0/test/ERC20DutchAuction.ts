@@ -19,7 +19,7 @@ describe("ERC20test", function () {
 
     describe("NFT mint", function () {
         it("Should succeed to mint", async function () {
-            const { NFT, owner, bidder } = await loadFixture(deployERC20Fixture);
+            const { NFT, owner } = await loadFixture(deployERC20Fixture);
 
             expect(await NFT.balanceOf(owner.address)).to.equal(1);
             expect(await NFT.ownerOf(1)).to.equal(owner.address);
@@ -47,6 +47,7 @@ describe("ERC20test", function () {
             await E20.transfer(owner.address, 100);
             expect(await E20.balanceOf(bidder.address)).to.equal(1900);
             expect(await E20.balanceOf(owner.address)).to.equal(100);
+            // test allowance and transferFrom
             await E20.increaseAllowance(bidder.address, 100);
             await E20.transferFrom(bidder.address, owner.address, 100);
             expect(await E20.balanceOf(bidder.address)).to.equal(1800);
@@ -59,7 +60,7 @@ describe("ERC20test", function () {
             const{ NFT, E20, owner, bidder} = await loadFixture(deployERC20Fixture);
 
             const AuctionToken = await ethers.getContractFactory("NFTDutchAuction");
-            const Auction = await AuctionToken.connect(owner).deploy(
+            const Auction = await AuctionToken.deploy(
                 E20.address,
                 NFT.address,
                 1,
@@ -74,20 +75,23 @@ describe("ERC20test", function () {
         it("should end the auction after bidding", async function () {
             const { NFT, Auction, E20, owner, bidder } = await loadFixture(deployAuction);
 
+            // initial state
             expect(await E20.balanceOf(bidder.address)).to.equal(2000);
             expect(await NFT.getApproved(1)).to.equal(Auction.address);
             expect(await Auction.initialPrice()).to.equal(2000);
+            // after 10 blocks
             for (let i = 0; i < 15; i++) {
                 await network.provider.send("evm_mine");
             }
 
+            // award some allowance to auction
             await E20.allowance(E20.address, Auction.address);
             await E20.increaseAllowance(Auction.address, 2000);
-            // await E20.approve(bidder.address, 2000);
+            // bid to cause an auction to end
             await Auction.connect(bidder).bid();
             expect(await NFT.ownerOf(1)).to.equal(bidder.address);
-            expect(await E20.balanceOf(E20.address)).to.equal(0);
-            expect(await NFT.balanceOf(owner.address)).to.equal(0);
+            expect(await E20.balanceOf(bidder.address)).to.equal(0);
+            expect(await E20.balanceOf(owner.address)).to.equal(2000);
             expect(await Auction.auctionEnd()).to.equal(true);
         })
     });
