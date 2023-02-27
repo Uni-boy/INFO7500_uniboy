@@ -84,6 +84,7 @@ describe("upgradeable test", function () {
             expect(await E20.balanceOf(bidder.address)).to.equal(2000);
             expect(await NFT.getApproved(1)).to.equal(upgradedNFTDutchAuction.address);
             expect(await upgradedNFTDutchAuction.initialPrice()).to.equal(2000);
+            expect(await upgradedNFTDutchAuction.isVersion2()).to.equal(2);
             // after 10 blocks
             for (let i = 0; i < 15; i++) {
                 await network.provider.send("evm_mine");
