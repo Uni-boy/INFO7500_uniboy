@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract NFTDutchAuction is Initializable, UUPSUpgradeable {
+contract NFTDutchAuctionV2 is Initializable, UUPSUpgradeable {
     IERC721 public nftContract;
     uint256 public nftTokenId;
     IERC20 public myToken;
@@ -44,6 +44,10 @@ contract NFTDutchAuction is Initializable, UUPSUpgradeable {
             _offerPriceDecrement;
         nftContract = IERC721(erc721TokenAddress);
         myToken = IERC20(erc20TokenAddress);
+    }
+
+    function isVersion2() public pure returns (uint256){
+        return 2;
     }
 
     modifier onlyOwner() {
