@@ -1,6 +1,7 @@
 import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { ethers, network, upgrades } from "hardhat";
+import { boolean } from "hardhat/internal/core/params/argumentTypes";
 
 describe("upgradeable test", function () {
     async function deployAuctionFixture() {
@@ -41,12 +42,19 @@ describe("upgradeable test", function () {
             // expect(await NFTDutchAuction.owner()).to.equal(NFTDutchAuction.address);
         });
 
+        // it("Should successfully upgraded", async function () {
+        //     const { NFTDutchAuction }  = await loadFixture(deployAuctionFixture);
+        //     let res: boolean = NFTDutchAuction.("0x1234567890123456789012345678901234567890");
+        //     expect(res).to.be(true)
+        // })
+
         it("Should upgrade successfully", async function () {
-            const { NFTDutchAuction } = await loadFixture(deployAuctionFixture);
+            const { NFTDutchAuction, bidder } = await loadFixture(deployAuctionFixture);
             const upgradedNFTDutchAuctionToken = await ethers.getContractFactory("NFTDutchAuctionV2");
 
             const upgradedNFTDutchAuction = await upgrades.upgradeProxy(NFTDutchAuction.address, upgradedNFTDutchAuctionToken);
             
+            await expect(upgradedNFTDutchAuction.connect(bidder).isOwner()).to.be.revertedWith("Only the contract owner can perform this action.");
             expect(await upgradedNFTDutchAuction.isVersion2()).to.equal(2);
         })
 

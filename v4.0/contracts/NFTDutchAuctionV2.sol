@@ -58,6 +58,10 @@ contract NFTDutchAuctionV2 is Initializable, UUPSUpgradeable {
         _;
     }
 
+    function isOwner() public view onlyOwner returns(bool) {
+        return true;
+    }
+
     function _authorizeUpgrade(
         address newImplementation
     ) internal override onlyOwner {}
