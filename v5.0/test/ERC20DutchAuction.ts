@@ -148,28 +148,5 @@ describe("upgradeable test", function () {
             // Check if the auction has ended
             expect(await NFTDutchAuction.auctionEnd()).to.equal(true);
         })
-
-        // it("should end the auction after bidding using NFTDutchAuction", async function () {
-        //     const { NFT, NFTDutchAuction, MyERC20Permit, auctionOwner, bidder } = await loadFixture(deployAuctionFixture);
-
-        //     // initial state
-        //     expect(await MyERC20Permit.balanceOf(bidder.address)).to.equal(2000);
-        //     expect(await NFT.getApproved(1)).to.equal(NFTDutchAuction.address);
-        //     expect(await NFTDutchAuction.initialPrice()).to.equal(2000);
-        //     // after 10 blocks
-        //     for (let i = 0; i < 15; i++) {
-        //         await network.provider.send("evm_mine");
-        //     }
-
-        //     // award some allowance to auction
-        //     await MyERC20Permit.allowance(MyERC20Permit.address, NFTDutchAuction.address);
-        //     await MyERC20Permit.increaseAllowance(NFTDutchAuction.address, 2000);
-        //     // bid to cause an auction to end
-        //     await NFTDutchAuction.connect(bidder).bid();
-        //     expect(await NFT.ownerOf(1)).to.equal(bidder.address);
-        //     expect(await MyERC20Permit.balanceOf(bidder.address)).to.equal(0);
-        //     expect(await MyERC20Permit.balanceOf(owner.address)).to.equal(2000);
-        //     expect(await NFTDutchAuction.auctionEnd()).to.equal(true);
-        // })
     });
 });
