@@ -46,10 +46,10 @@ contract BasicDutchAuction {
         return stopped;
     }
 
-    function bid() public payable returns (address) {
+    function bid() external payable returns (address) {
         require(msg.value >= currentPrice - (block.number - blockStart) * offerPriceDecrement, "Bid is lower than currentPrice");
         require(!stopped, "Auction has ended");
-        require(msg.sender != seller, "Seller cannot bid");
+        // require(msg.sender != seller, "Seller cannot bid");
         require(winner == address(0), "There is already a winner");
         finalize(msg.value);
         return address(0);

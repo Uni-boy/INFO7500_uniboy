@@ -15,7 +15,7 @@ const config: HardhatUserConfig = {
     hardhat: {
       mining: {
         auto: false,
-        interval: 1000
+        interval: 10000
       }
     },
     ropsten: {

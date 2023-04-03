@@ -57,7 +57,9 @@ export function DutchAuction(): ReactElement {
   const [offerPriceDecrement, setOfferPriceDecrement] = useState<string>('');
   const [bidValue, setBidValue] = useState<string>('');
   const [contractAddr, setContractAddr] = useState<string>('');
-  const [bidderAddr, setBidderAddr] = useState<string>('');
+  const [owner, setOwner] = useState<string>('');
+  const [initialPrice, setInitialPrice] = useState<string>('');
+  const [winner, setWinner] = useState<string>('');
 
   useEffect((): void => {
     if (!library) {
@@ -123,14 +125,27 @@ export function DutchAuction(): ReactElement {
     }
 
     async function submitBid(auctionContract: Contract): Promise<void> {
+      event.preventDefault();
+
+      if (!signer) {
+        window.alert('Signer is not available');
+        return;
+      }
+
       try {
         const value = ethers.utils.parseEther(bidValue);
-        if (!signer) {
-          window.alert('Signer is not available');
-          return;
-        }
-        const tx = await auctionContract.connect(signer).bid({ value, gasLimit: ethers.BigNumber.from("1000000") });
+
+        const _auctionContract = new Contract(
+          auctionContract.address,
+          BasicDutchAuctionArtifact.abi,
+          signer
+        );
+
+        const tx = await _auctionContract.connect(signer).bid({ value, gasLimit: ethers.BigNumber.from("1000000") });
         await tx.wait();
+
+        setWinner(await _auctionContract.winner());
+
         window.alert('Bid submitted successfully!');
       } catch (error: any) {
         window.alert(
@@ -141,10 +156,27 @@ export function DutchAuction(): ReactElement {
     submitBid(auctionContract);
   }
 
-  function handleShowInfo(event: MouseEvent<HTMLButtonElement>): void {
+  async function handleShowInfo(event: MouseEvent<HTMLButtonElement>): Promise<void> {
     event.preventDefault();
+
+    const _auctionContract = new Contract(
+      contractAddr,
+      BasicDutchAuctionArtifact.abi,
+      signer
+    );
+
     if (auctionContract) {
       setContractAddr(auctionContract.address);
+
+      try {
+        const initialPrice = await auctionContract.initialPrice();
+        const owner = await auctionContract.seller();
+
+        setInitialPrice(initialPrice.toString());
+        setOwner(owner);
+      } catch (error) {
+        console.error("Error fetching initialPrice and seller:", error);
+      }
     }
   }
 
@@ -201,12 +233,28 @@ export function DutchAuction(): ReactElement {
       </StyledDeployContractButton>
       <SectionDivider />
       <StyledContractInfo>
-        <StyledLabel htmlFor="contractAddr">Contract Address</StyledLabel>
+        <StyledLabel htmlFor="contractAddr">Contract Address:</StyledLabel>
         <StyledInput
           id="contractAddr"
           type="text"
           placeholder="Contract Address"
           value={contractAddr}
+          readOnly
+        />
+        <StyledLabel htmlFor="initialPrice">Initial Price:</StyledLabel>
+        <StyledInput
+          id="initialPrice"
+          type="text"
+          placeholder="Initial Price"
+          value={initialPrice}
+          readOnly
+        />
+        <StyledLabel htmlFor="owner">Owner Address:</StyledLabel>
+        <StyledInput
+          id="owner"
+          type="text"
+          placeholder="Owner Address"
+          value={owner}
           readOnly
         />
       </StyledContractInfo>
@@ -240,7 +288,18 @@ export function DutchAuction(): ReactElement {
       >
         Submit Bid:
       </StyledButton>
+      <StyledContractInfo>
+      <StyledLabel htmlFor="winner">
+        Winner:
+      </StyledLabel>
+      <StyledInput
+        id="bidValue"
+        type="text"
+        placeholder="Winner address"
+        value={winner}
+        readOnly
+      ></StyledInput>
+      </StyledContractInfo>
     </>
   );
 }
-
