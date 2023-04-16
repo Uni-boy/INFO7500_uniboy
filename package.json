@@ -8,5 +8,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-foundry": "^1.0.1",
+    "hardhat": "^2.14.0"
+  }
 }
