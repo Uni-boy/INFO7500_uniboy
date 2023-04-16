@@ -1,0 +1,47 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/xinzhuoliu/7500Crypto/Assignment/INFO7500_uniboy/UniswapV2/src/Counter.sol": {
+      "lastModificationDate": 1681619275669,
+      "contentHash": "ae6c800a2b4c57768024d6e9423d39e8",
+      "sourceName": "src/Counter.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "remappings": [
+            "ds-test/=lib/forge-std/lib/ds-test/src/",
+            "forge-std/=lib/forge-std/src/"
+          ],
+          "metadata": {
+            "useLiteralContent": false
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "Counter"
+      ]
+    }
+  }
+}

@@ -1,3 +1,6 @@
 {
-  "name": "hardhat-project"
+  "name": "hardhat-project",
+  "devDependencies": {
+    "solidity-coverage": "^0.8.2"
+  }
 }
